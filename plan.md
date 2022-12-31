@@ -2,6 +2,16 @@
 
 Lets plan out the steps to create the parser.
 
+## Issues
+
+- List items
+The first item of a list are not following the rules properly. An item can be placed 1 space away from the margin and the parser says its valid. This causes a domino effect that can affect all subsequent list items. The issue can end up creating unwanted lists.
+So if the first item sits next to the margin a list is created for it and for the second item which sits only 1 space away from the margin another list is created. What should have been a single list with two items is now two lists with one item each.
+```js
+- the first item
+ - the second item
+```
+
 ## Global Plan
 
 1. Find the markdown file
@@ -40,6 +50,76 @@ Because all files start with a title, that is the first thing we will look for
   - else:
     - return false ✅
 
+4. check for lists. This step is a bit more complicated because lists can contain other lists so we must track each item and its indentation to know in which list they belong.
+  - create function called get_ul_lists that takes one parameter all_file_lines ✅
+  - create a list that holds dictionaries {level: number, end: number}. 'list_levels' ✅
+  - create a variable 'current_level' to store the current list level ✅
+  - create variable to hold the 'html_list' as array ✅
+  - use regex to match beginning of list, only 4 spaces or 1 tab is allowed ✅
+  - if there is a match: ✅
+    - add `<ul>` as first item to the html_list ✅
+    - **WHILE LOOP**
+    - use while 'current_level' is more than or = 0 ✅
+      - append the first line from the 'all_file_lines' as we know this is valid list item `<li>some text`, leave the closing li tag incase of nested list ✅
+      - remove the first item from the `all_file_lines` list ✅
+      - use regex to match the next line. It will look for the first occurrence of the marker at the beginning of the text. ✅
+      - if match and match is equals to the current level ✅
+        - concat `</li>` to end of the last list item in html_list ✅
+      - else if match and match is equals to current level plus two (we have a nested list) ✅
+        - append `<ul>` to the html_list ✅
+        - increment 'current_level' by 1 ✅
+        - append current level info to 'list_levels' array
+      - else if match and match is less than current 'current_level' ✅
+        - concat `</li>` to end of the last list item in html_list ✅
+        - append `</ul>` to the html_list ✅
+        - append `</li>` to the html_list ✅
+        - decrement 'current_level' by 1 ✅
+        - create counter for while loop i = 'current_level' ✅
+        - **while loop** while i > 1 ✅
+          - if match is equal to list_level[i] match ✅
+            - set counter to 1 ✅
+          - else
+            - append `</ul>` to the html_list to close this list level ✅
+            - append `</li>` to the html_list ✅
+            - decrement 'current_level' by 1 ✅
+            - decrement counter by 1 ✅
+      - else, there are no more matches
+        - create counter for while loop i = 'current_level' ✅
+        - **while loop** i > 0 ✅
+          - append `</li>` to the html_list ✅
+          - append `</ul>` to the html_list ✅
+          - decrement counter by 1 ✅
+        - set 'current_level' to zero ✅
+
+``` js
+// TEST ONE - PASSED
+- item One
+  - item Two
+    - item Three
+      - item Four
+    - item Three One
+      - item Four One
+
+// TEST TWO - PASSED
+- item One
+- item Two
+  - item Three
+  - item Four
+    - item Five
+  - item Six
+- item Seven
+
+// TEST THREE - PASSED
+- item One
+  - item Two
+    - item Three
+- item Four
+  - item Five
+    - item Six
+      - item Seven
+```
+
+
 ## Rules
 
 ### Header rules
@@ -74,13 +154,23 @@ Because all files start with a title, that is the first thing we will look for
 
 ### List rules
 
-- add line items with numbers followed by periods
-- list needs to start with 1
-- the other numbers in lists dont have to be in numberial order
-- for lists within lists:
-  - new list needs to be indented 4 spaces or 1 tab more from parent list
+**Unordered lists**
+- lists starts with any of these `- * +` 
 ```
-- item one
-    - list within
-      - another list level deep
++ list item
+- also a valid list item
+* another valid item
+```
+- The very first list item must have 0 to 4 spaces or single tab to be valid. Otherwise it is treated as a paragraph.
+```
+- valid list start
+      - list started to far out and is treated as a paragraph
+```
+- to nest a list, the marker for the next level list must appear below the first character of the parent list item.
+```
+- First item of parent list
+  - Nested list
+the marker must sit below the first character of previous item
+    - First item
+      - nested item
 ```

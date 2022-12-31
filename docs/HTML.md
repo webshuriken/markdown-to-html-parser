@@ -6,7 +6,7 @@ HTML is a Hyper Text Markup Language use to structure web site.
 
 Created a long time ago now, HTML tells browsers how to structure the document.
 
-Semantic HTML uses specific tags to represent __different__ part of the document like a header.
+Semantic HTML uses spe**ci**fic tags to represent __different__ part of the document like a header.
 
 Using tags you describe the document **layout**
 
@@ -14,8 +14,9 @@ Using tags you describe the document **layout**
 
 - <h1></h1>
 - Browser tab **header** <title></title>. 
-  Lazy continuation line.
-- Text nodes
+- Lazy continuation line.
+  - Text nodes
+  - Same level item
 - anchor
 - paragraph
 - heading

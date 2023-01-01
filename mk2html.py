@@ -32,6 +32,73 @@ def get_header(file_line):
   else:
     return (False, 'Header not found')
 
+# @description check for list items
+# @params file_line {string}
+# @returns {tuple} of three values {bool, string, updatedFileLines}
+def get_lists(all_file_lines):
+  # list of dictionaries, each has the list level and match end location
+  list_levels = [{"level": 0, "end": 0}]
+  current_level = 0
+  # will store the list as a combination of html tags and text items
+  html_list = []
+  # to start a list, the first item must start at 0 spaces or 2 spaces from margin
+  match = re.match(r'^\s{,2}[\*-] ', all_file_lines[0])
+  # go further, only, if there was a match
+  if match:
+    html_list.append('<ul>')
+    list_levels[0]["end"] = match.end()
+    # loop will find all items including the nested ones
+    while current_level >= 0:
+      # at this point we guaranty a valid list item, so lets append to 'html_list'
+      html_list.append(f'<li>{all_file_lines[0][match.end():]}')
+      # remove the first file line as its a list item
+      all_file_lines.pop(0)
+      # lets check for another list item
+      match = re.match(r'\s*[\*-] ', all_file_lines[0]) 
+
+      # is current item match same as current list level
+      if match and match.end() == list_levels[current_level]["end"]:
+        html_list[len(html_list) - 1] += '</li>'
+      # is current item match a nested list
+      elif match and match.end() == (list_levels[current_level]["end"] + 2):
+        html_list.append('<ul>')
+        current_level += 1
+        list_levels.append({"level": current_level, "end": match.end()})
+      # is current item match a level before the current active list level
+      elif match and match.end() < list_levels[current_level]["end"]:
+        # appending here is to guarante the closure of currently nested list
+        html_list[len(html_list) - 1] += '</li>'
+        html_list.append('</ul>')
+        html_list.append('</li>')
+        current_level -= 1
+        # close all open lists until we arrive at a valid list level that matches
+        i = current_level
+        while i >= 0:
+          # level found so lets exit loop
+          if match.end() == list_levels[i]["end"]:
+            i = -1
+          else:
+            html_list.append('</ul>')
+            html_list.append('</li>')
+            current_level -= 1
+            i -= 1
+      else:
+        # as there are not more matches, close all nested lists and list items
+        i = current_level
+        while i >= 0:
+          html_list.append('</li>')
+          html_list.append('</ul>')
+          i -= 1
+        current_level = -1
+
+  # prepares the tuple to be returned
+  list_found = (False, 'No list here', all_file_lines)
+  if len(html_list) >= 1:
+    list_found = (True, html_list, all_file_lines)
+
+  return list_found
+
+# @description Parser logic taking care of transforming the markdown file to HTML
 def init_parser():
   print('\n## Welcome this is Markdown to HTML parser ##\n')
   # global list store the created html tags
@@ -51,8 +118,14 @@ def init_parser():
       md_file_lines.pop(0)
       continue
 
-    # TODO: temp line. will remove an item from the list on each iteration
+    # lets check for lists
+    list = get_lists(md_file_lines)
+    if list[0]:
+      html_list.extend(list[1])
+      md_file_lines = list[2]
+
     # stopping an infinite loop
-    md_file_lines.pop(0)
+    if not list[0]:
+      md_file_lines.pop(0)
 
 init_parser()

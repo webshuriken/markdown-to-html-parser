@@ -12,6 +12,9 @@ So if the first item sits next to the margin a list is created for it and for th
  - the second item
 ```
 
+- paragraphs ✅ (SOLVED)
+Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.. The regex separating the document lines into a list needs looking into..
+
 ## Global Plan
 
 1. Find the markdown file
@@ -119,6 +122,19 @@ Because all files start with a title, that is the first thing we will look for
       - item Seven
 ```
 
+5. Check for paragraphs
+Because we are checking for headers and list items first, if neither one was a match, we can savely assume that the line is a paragraph, therefore:
+- when we arrive at this point in the code, just add the line to the 'html_list' ✅
+- remove the item from 'md_file_lines' ✅
+**New paragraph iteration**
+Paragraphs needs to be separated by a blank line between them. If there is no blank line then the text is assumed to be part of the same paragraph, even if its anything other like a header or list item.
+- create function 'get_paragraphs' that takes parameter 'md_file_lines' to check for all lines ✅
+- create variable 'html_p' to hold the paragraph, with initial value of '<p>' ✅
+- **WHILE** loop until you find an empty space '' ✅
+  - concat current md_file_lines[0] with 'html_p' variable ✅
+  - remove the first item in the md_file_lines array ✅
+- close the paragraph tag by appending it to the 'html_p' variable, remove any leading spaces ✅
+- return a tuple with (True, html_p, md_file_lines) ✅
 
 ## Rules
 

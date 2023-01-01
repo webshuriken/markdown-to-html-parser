@@ -33,7 +33,7 @@ def get_header(file_line):
     return (False, 'Header not found')
 
 # @description check for list items
-# @params file_line {string}
+# @params all_file_lines {list}
 # @returns {tuple} of three values {bool, string, updatedFileLines}
 def get_lists(all_file_lines):
   # list of dictionaries, each has the list level and match end location
@@ -98,6 +98,22 @@ def get_lists(all_file_lines):
 
   return list_found
 
+# @description check for paragraphs
+# @params all_file_lines {list}
+# @returns {tuple} of three values {bool, string, updatedFileLines}
+def get_paragraphs(all_file_lines):
+  html_p = '<p>'
+  # lets keep going until we find an empty line
+  while all_file_lines[0].strip() != '':
+    html_p += f'{all_file_lines[0]} '
+    all_file_lines.pop(0)
+  
+  # close the paragraph tag
+  html_p = html_p.rstrip() + '</p>'
+
+  return (True, html_p, all_file_lines)
+
+
 # @description Parser logic taking care of transforming the markdown file to HTML
 def init_parser():
   print('\n## Welcome this is Markdown to HTML parser ##\n')
@@ -108,9 +124,14 @@ def init_parser():
   file_name = 'HTML'
   md_file = get_md_file(file_name)
   # split file into lines
-  md_file_lines = re.split(r'[\n\r]+', md_file)
+  md_file_lines = re.split(r'[\n\r]', md_file)
 
   while len(md_file_lines) > 0:
+    # check for empty item in array
+    if md_file_lines[0].strip() == '':
+      md_file_lines.pop(0)
+      continue
+
     # lets check for header
     header = get_header(md_file_lines[0])
     if header[0]:
@@ -123,9 +144,16 @@ def init_parser():
     if list[0]:
       html_list.extend(list[1])
       md_file_lines = list[2]
+      continue
 
-    # stopping an infinite loop
-    if not list[0]:
-      md_file_lines.pop(0)
+    # at this point we can assume the line is a paragraph
+    paragraph = get_paragraphs(md_file_lines)
+    if (paragraph[0]):
+      html_list.append(paragraph[1])
+      md_file_lines = paragraph[2]
+      continue
+  
+  # show me the final html_list
+  print(f'FINAL LIST: \n{html_list}')
 
 init_parser()

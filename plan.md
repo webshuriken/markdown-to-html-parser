@@ -12,6 +12,9 @@ So if the first item sits next to the margin a list is created for it and for th
  - the second item
 ```
 
+- paragraphs
+Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.. The regex separating the document lines into a list needs looking into..
+
 ## Global Plan
 
 1. Find the markdown file
@@ -119,6 +122,10 @@ Because all files start with a title, that is the first thing we will look for
       - item Seven
 ```
 
+5. Check for paragraphs
+Because we are checking for headers and list items first, if neither one was a match, we can savely assume that the line is a paragraph, therefore:
+- when we arrive at this point in the code, just add the line to the 'html_list' ✅
+- remove the item from 'md_file_lines' ✅
 
 ## Rules
 

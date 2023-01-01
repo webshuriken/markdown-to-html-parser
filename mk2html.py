@@ -108,7 +108,7 @@ def init_parser():
   file_name = 'HTML'
   md_file = get_md_file(file_name)
   # split file into lines
-  md_file_lines = re.split(r'[\n\r]+', md_file)
+  md_file_lines = re.split(r'[\n\r]', md_file)
 
   while len(md_file_lines) > 0:
     # lets check for header
@@ -123,9 +123,13 @@ def init_parser():
     if list[0]:
       html_list.extend(list[1])
       md_file_lines = list[2]
+      continue
 
-    # stopping an infinite loop
-    if not list[0]:
-      md_file_lines.pop(0)
+    # at this point we can assume the line is a paragraph
+    html_list.append(f'<p>{md_file_lines[0]}</p>')
+    md_file_lines.pop(0)
+  
+  # show me the final html_list
+  print(f'FINAL LIST: \n{html_list}')
 
 init_parser()

@@ -49,6 +49,9 @@ def get_lists(all_file_lines):
     list_levels[0]["end"] = match.end()
     # loop will find all items including the nested ones
     while current_level >= 0:
+      print(f'LINE 1: {all_file_lines}')
+      all_file_lines[0] = text_filter(all_file_lines[0])
+      print(f'LINE 2: {all_file_lines}')
       # at this point we guaranty a valid list item, so lets append to 'html_list'
       html_list.append(f'<li>{all_file_lines[0][match.end():]}')
       # remove the first file line as its a list item
@@ -118,15 +121,18 @@ def get_paragraphs(all_file_lines):
 # @returns {string} the string with a ny link of bold tags
 def text_filter(text):
   print("FILTERING THE TEXT FOR BOLDNESS")
-  get_boldness(text)
+  html_text = get_boldness(text)
   # search for links
   # return an iterable that tells us the location of the text found
   # match = re.finditer(r'\[[^\s]+\]\([^\s]+\)', string)
 
   # search for boldness
   # match = re.finditer(r'[*_]{2}(\w\s?)+\w[*_]{2}', string)
+  return html_text
 
-
+# @description replace all matches of boldness with its html tags
+# @params text {string}
+# @returns {string} the string with html tags
 def get_boldness(text):
   match = re.finditer(r'[*_]{2}(\w\s?)+\w[*_]{2}', text)
   html_bold = ''
@@ -134,16 +140,14 @@ def get_boldness(text):
   # regex iterator, lets loop
   for item in match:
     html_bold += text[match_end:item.start()]
-    html_bold += f'<b>{text[item.start():item.end()]}</b>'
+    html_bold += f'<b>{text[item.start() + 2:item.end() - 2]}</b>'
     match_end = item.end()
-  
+
   # finalize the bold update
   if (match_end > 0):
     html_bold += text[match_end:len(text)]
 
   return html_bold
-
-
 
 # @description Parser logic taking care of transforming the markdown file to HTML
 def init_parser():
@@ -169,8 +173,6 @@ def init_parser():
       html_list.append(header[1])
       md_file_lines.pop(0)
       continue
-
-    text_filter(md_file_lines[0])
 
     # lets check for lists
     list = get_lists(md_file_lines)

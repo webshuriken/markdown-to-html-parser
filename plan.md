@@ -15,6 +15,9 @@ So if the first item sits next to the margin a list is created for it and for th
 - paragraphs ✅ (SOLVED)
 Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.. The regex separating the document lines into a list needs looking into..
 
+- boldness ✅ (SOLVED)
+Missed the fact that I have to remove the markers which indicated the texts is to be bold.
+
 ## Global Plan
 
 1. Find the markdown file
@@ -138,6 +141,7 @@ Paragraphs needs to be separated by a blank line between them. If there is no bl
 
 5. filter text for boldness or links
 - create function 'text_filter' takes in a single parameter 'text' ✅
+- create variable 'html_text' to store the final filtered text ✅
 - first check for bold text
 - Boldness:
   - create function 'get_boldness' that takes a string 'text' ✅

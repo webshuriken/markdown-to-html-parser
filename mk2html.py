@@ -113,6 +113,37 @@ def get_paragraphs(all_file_lines):
 
   return (True, html_p, all_file_lines)
 
+# @description filter text to find boldness and/or links
+# @params text {string}
+# @returns {string} the string with a ny link of bold tags
+def text_filter(text):
+  print("FILTERING THE TEXT FOR BOLDNESS")
+  get_boldness(text)
+  # search for links
+  # return an iterable that tells us the location of the text found
+  # match = re.finditer(r'\[[^\s]+\]\([^\s]+\)', string)
+
+  # search for boldness
+  # match = re.finditer(r'[*_]{2}(\w\s?)+\w[*_]{2}', string)
+
+
+def get_boldness(text):
+  match = re.finditer(r'[*_]{2}(\w\s?)+\w[*_]{2}', text)
+  html_bold = ''
+  match_end = 0
+  # regex iterator, lets loop
+  for item in match:
+    html_bold += text[match_end:item.start()]
+    html_bold += f'<b>{text[item.start():item.end()]}</b>'
+    match_end = item.end()
+  
+  # finalize the bold update
+  if (match_end > 0):
+    html_bold += text[match_end:len(text)]
+
+  return html_bold
+
+
 
 # @description Parser logic taking care of transforming the markdown file to HTML
 def init_parser():
@@ -138,6 +169,8 @@ def init_parser():
       html_list.append(header[1])
       md_file_lines.pop(0)
       continue
+
+    text_filter(md_file_lines[0])
 
     # lets check for lists
     list = get_lists(md_file_lines)

@@ -136,6 +136,29 @@ Paragraphs needs to be separated by a blank line between them. If there is no bl
 - close the paragraph tag by appending it to the 'html_p' variable, remove any leading spaces ✅
 - return a tuple with (True, html_p, md_file_lines) ✅
 
+5. filter text for boldness or links
+- create function 'text_filter' takes in a single parameter 'text' ✅
+- first check for bold text
+- Boldness:
+  - create function 'get_boldness' that takes a string 'text' ✅
+  - use regex to find all matches to iterate over and store in 'match' variable ✅
+  - create variable 'html_bold' to store updated text ✅
+  - create variable to store the last match location 'match_end' ✅
+  TODO: LOGIC NEEDS RETHINKING
+  - **loop** regex returned an iterable item, loop through it ✅
+    - in 'html_bold' ✅
+      - concat any text at from 'match_end' up to the start of the bold match ✅
+      - concat `<b>` with any text from start of bold match to the end ✅
+      - 'match_end' var is equal the end location of the current matched text ✅
+  - if var 'match_end' is more than 0, a match was found: ✅
+    - concat any leftover text from the end of last match to the length of the text ✅
+  - return the converted text 'html_bold' ✅
+
+- Links:
+They need to be completely replaced. Grabbing the link and text for link
+from: `[text_for_link](link)`
+to: `<a href="link">text_for_link</a>`
+
 ## Rules
 
 ### Header rules

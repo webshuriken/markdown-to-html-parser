@@ -148,20 +148,31 @@ Paragraphs needs to be separated by a blank line between them. If there is no bl
   - use regex to find all matches to iterate over and store in 'match' variable ✅
   - create variable 'html_bold' to store updated text ✅
   - create variable to store the last match location 'match_end' ✅
-  TODO: LOGIC NEEDS RETHINKING
   - **loop** regex returned an iterable item, loop through it ✅
     - in 'html_bold' ✅
-      - concat any text at from 'match_end' up to the start of the bold match ✅
+      - concat any text from 'match_end' up to the start of the bold match ✅
       - concat `<b>` with any text from start of bold match to the end ✅
       - 'match_end' var is equal the end location of the current matched text ✅
   - if var 'match_end' is more than 0, a match was found: ✅
     - concat any leftover text from the end of last match to the length of the text ✅
   - return the converted text 'html_bold' ✅
-
 - Links:
 They need to be completely replaced. Grabbing the link and text for link
 from: `[text_for_link](link)`
 to: `<a href="link">text_for_link</a>`
+  - create function 'get_links' to take arguments 'text' ✅
+  - regex the links and store them result in 'match' var  ✅
+  - create variable 'html_link' to store updated text ✅
+  - create 'match_end' variable to store the end location of the current match ✅
+  - **loop** use regex iterable from matched links ✅
+    - in 'html_link' 
+      - extract link text and store in 'link_text' ✅
+      - extract link url and store in 'link_url' ✅
+      - concat any text from 'match_end' up to the start of the link match ✅
+      - 'match_end' variable to store the end location of the currently matched link ✅
+    - if variable 'match_end' is more than 0 ✅
+      - concat leftover text from the end of last matched link to the end of the text ✅
+    - return 'html_link' ✅
 
 ## Rules
 

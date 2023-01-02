@@ -49,9 +49,6 @@ def get_lists(all_file_lines):
     list_levels[0]["end"] = match.end()
     # loop will find all items including the nested ones
     while current_level >= 0:
-      print(f'LINE 1: {all_file_lines}')
-      all_file_lines[0] = text_filter(all_file_lines[0])
-      print(f'LINE 2: {all_file_lines}')
       # at this point we guaranty a valid list item, so lets append to 'html_list'
       html_list.append(f'<li>{all_file_lines[0][match.end():]}')
       # remove the first file line as its a list item
@@ -97,6 +94,9 @@ def get_lists(all_file_lines):
   # prepares the tuple to be returned
   list_found = (False, 'No list here', all_file_lines)
   if len(html_list) >= 1:
+    # filter the text for each item in the list
+    for i in range(len(html_list)):
+      html_list[i] = text_filter(html_list[i])
     list_found = (True, html_list, all_file_lines)
 
   return list_found
@@ -120,14 +120,9 @@ def get_paragraphs(all_file_lines):
 # @params text {string}
 # @returns {string} the string with a ny link of bold tags
 def text_filter(text):
-  print("FILTERING THE TEXT FOR BOLDNESS")
-  html_text = get_boldness(text)
-  # search for links
-  # return an iterable that tells us the location of the text found
-  # match = re.finditer(r'\[[^\s]+\]\([^\s]+\)', string)
-
-  # search for boldness
-  # match = re.finditer(r'[*_]{2}(\w\s?)+\w[*_]{2}', string)
+  # html_text = get_boldness(text)
+  html_text = get_links(text)
+  print(f'OUTPUT: {html_text}')
   return html_text
 
 # @description replace all matches of boldness with its html tags
@@ -144,10 +139,38 @@ def get_boldness(text):
     match_end = item.end()
 
   # finalize the bold update
-  if (match_end > 0):
+  if match_end > 0:
     html_bold += text[match_end:len(text)]
+  else:
+    html_bold = text
 
   return html_bold
+
+# @description replace all matched links with their html tags
+# @params text {string}
+# @returns {string} the string with html links
+def get_links(text):
+  match = re.finditer(r'(\[[^\s]+\])(\([^\s]+\))', text)
+  html_link = ''
+  match_end = 0
+  # use the iterator
+  for item in match:
+    # extract the link text and url
+    link_text = item.group(1)[1:len(item.group(1)) - 1]
+    link_url = item.group(2)[1:len(item.group(2)) - 1]
+    # put it all together
+    html_link += text[match_end:item.start()]
+    html_link += f'<a href="{link_url}">{link_text}</a>'
+    match_end = item.end()
+
+  # finalize the text creation
+  if match_end > 0:
+    html_link += text[match_end:len(text)]
+  else:
+    html_link = text
+
+  return html_link
+
 
 # @description Parser logic taking care of transforming the markdown file to HTML
 def init_parser():

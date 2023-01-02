@@ -114,15 +114,17 @@ def get_paragraphs(all_file_lines):
   # close the paragraph tag
   html_p = html_p.rstrip() + '</p>'
 
+  # filter the text for boldness or links
+  html_p = text_filter(html_p)
+
   return (True, html_p, all_file_lines)
 
 # @description filter text to find boldness and/or links
 # @params text {string}
 # @returns {string} the string with a ny link of bold tags
 def text_filter(text):
-  # html_text = get_boldness(text)
-  html_text = get_links(text)
-  print(f'OUTPUT: {html_text}')
+  html_text = get_boldness(text)
+  html_text = get_links(html_text)
   return html_text
 
 # @description replace all matches of boldness with its html tags
@@ -212,6 +214,7 @@ def init_parser():
       continue
   
   # show me the final html_list
-  print(f'FINAL LIST: \n{html_list}')
+  for line in html_list:
+    print(line)
 
 init_parser()

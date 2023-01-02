@@ -7,11 +7,11 @@ HTML is a Hyper Text Markup Language use to structure web site.
 What happens if we separate with a single enter.
 And this is just below it??
 
-Created a long time ago now, HTML tells browsers how to structure the document.
+Created a [long](url) time ago now, [HTML](url) tells browsers how to structure the document.
 
-Semantic HTML uses spe**ci**fic tags to represent __different__ part of the document like a header.
+Semantic HTML uses spe**ci**fic tags to represent __different__ part of the document like aheader.
 
-Using tags you describe the document **layout**
+Using tags you describe the document **layout** extra text
 
 **Tags**
 

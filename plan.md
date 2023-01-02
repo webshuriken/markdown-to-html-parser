@@ -15,6 +15,9 @@ So if the first item sits next to the margin a list is created for it and for th
 - paragraphs ✅ (SOLVED)
 Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.. The regex separating the document lines into a list needs looking into..
 
+- boldness ✅ (SOLVED)
+Missed the fact that I have to remove the markers which indicated the texts is to be bold.
+
 ## Global Plan
 
 1. Find the markdown file
@@ -135,6 +138,41 @@ Paragraphs needs to be separated by a blank line between them. If there is no bl
   - remove the first item in the md_file_lines array ✅
 - close the paragraph tag by appending it to the 'html_p' variable, remove any leading spaces ✅
 - return a tuple with (True, html_p, md_file_lines) ✅
+
+5. filter text for boldness or links
+- create function 'text_filter' takes in a single parameter 'text' ✅
+- create variable 'html_text' to store the final filtered text ✅
+- first check for bold text
+- Boldness:
+  - create function 'get_boldness' that takes a string 'text' ✅
+  - use regex to find all matches to iterate over and store in 'match' variable ✅
+  - create variable 'html_bold' to store updated text ✅
+  - create variable to store the last match location 'match_end' ✅
+  - **loop** regex returned an iterable item, loop through it ✅
+    - in 'html_bold' ✅
+      - concat any text from 'match_end' up to the start of the bold match ✅
+      - concat `<b>` with any text from start of bold match to the end ✅
+      - 'match_end' var is equal the end location of the current matched text ✅
+  - if var 'match_end' is more than 0, a match was found: ✅
+    - concat any leftover text from the end of last match to the length of the text ✅
+  - return the converted text 'html_bold' ✅
+- Links:
+They need to be completely replaced. Grabbing the link and text for link
+from: `[text_for_link](link)`
+to: `<a href="link">text_for_link</a>`
+  - create function 'get_links' to take arguments 'text' ✅
+  - regex the links and store them result in 'match' var  ✅
+  - create variable 'html_link' to store updated text ✅
+  - create 'match_end' variable to store the end location of the current match ✅
+  - **loop** use regex iterable from matched links ✅
+    - in 'html_link' 
+      - extract link text and store in 'link_text' ✅
+      - extract link url and store in 'link_url' ✅
+      - concat any text from 'match_end' up to the start of the link match ✅
+      - 'match_end' variable to store the end location of the currently matched link ✅
+    - if variable 'match_end' is more than 0 ✅
+      - concat leftover text from the end of last matched link to the end of the text ✅
+    - return 'html_link' ✅
 
 ## Rules
 

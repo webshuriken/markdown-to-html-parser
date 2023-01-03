@@ -42,9 +42,11 @@ def get_lists(all_file_lines):
   # will store the list as a combination of html tags and text items
   html_list = []
   # to start a list, the first item must start at 0 spaces or 2 spaces from margin
-  match = re.match(r'^\s{,2}[\*-] ', all_file_lines[0])
-  # go further, only, if there was a match
-  if match:
+  match = re.match(r'^\s{,4}[\*\+-] ', all_file_lines[0])
+  # go further, when rule 2 of unordered lists is matched
+  if match and (match.end() == 2 or match.end() == 4 or match.end() == 6):
+  # if match:
+    print(f'MATCH: {match.start()}')
     html_list.append('<ul>')
     list_levels[0]["end"] = match.end()
     # loop will find all items including the nested ones
@@ -54,7 +56,7 @@ def get_lists(all_file_lines):
       # remove the first file line as its a list item
       all_file_lines.pop(0)
       # lets check for another list item
-      match = re.match(r'\s*[\*-] ', all_file_lines[0]) 
+      match = re.match(r'\s*[\*\+-] ', all_file_lines[0]) 
 
       # is current item match same as current list level
       if match and match.end() == list_levels[current_level]["end"]:
@@ -69,7 +71,9 @@ def get_lists(all_file_lines):
         # appending here is to guarante the closure of currently nested list
         html_list[len(html_list) - 1] += '</li>'
         html_list.append('</ul>')
-        html_list.append('</li>')
+        # if a list has a single item, the extra closure is not needed
+        if current_level > 0:
+          html_list.append('</li>')
         current_level -= 1
         # close all open lists until we arrive at a valid list level that matches
         i = current_level

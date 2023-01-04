@@ -4,19 +4,23 @@ Lets plan out the steps to create the parser.
 
 ## Issues
 
-- List items
-The first item of a list are not following the rules properly. An item can be placed 1 space away from the margin and the parser says its valid. This causes a domino effect that can affect all subsequent list items. The issue can end up creating unwanted lists.
-So if the first item sits next to the margin a list is created for it and for the second item which sits only 1 space away from the margin another list is created. What should have been a single list with two items is now two lists with one item each.
-```js
-- the first item
- - the second item
-```
+- List items:
+  - Add the `+` as a valid list item marker ✅
+  - follow rule 2 of unordered lists. First list item marker can only be 0, 2, 4 spaces from the left margin. ✅
+  - follow rule 3 of unordered lists. Nested lists are create by placing the list marker 2, 4 spaces away from the list marker on the line above. ✅
+  - handle tab usage. Currently the parser can not handle the use of tabs.
 
 - paragraphs ✅ (SOLVED)
 Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.. The regex separating the document lines into a list needs looking into..
 
 - boldness ✅ (SOLVED)
 Missed the fact that I have to remove the markers which indicated the texts is to be bold.
+
+- paragraphs
+When there is a list item that does not follow the rules, the parser moves on to the paragraph checker as it is now treated as a paragraph, however if the next list item is correctly placed but it sites on the line below the list item which failed, it is also treated as a paragraph. This is an unwanted effect and goes against the rules. If the rules are followed properly the described event should create a paragraph for the list item that was not indented properly and then create a list with any number of items for the line that has the list item that was indented properly.
+
+- paragraphs
+It seems paragraphs are not removing any left trailing white space. These need removing.
 
 ## Global Plan
 
@@ -124,6 +128,28 @@ Because all files start with a title, that is the first thing we will look for
     - item Six
       - item Seven
 ```
+The list did not take into account how to properly check when spaces or Tabs are being used. The use of a function to hide the intricacies of checking for Tabs or spaces.
+- create a function named 'valid_list_marker' ✅
+  - the function will take parameters: 
+  - `match = regex_match, list_levels = list_levels, current_level, list_type = start | current | previous | nested` ✅
+  - create var 'marker_is_valid' and set to false. It will be return by the function after checks ✅
+  - count the number of tabs in matched text and store in 'matched_tabs' ✅
+  - first lets check for the basic list marker, level 0. ✅
+    - if matched_tabs == 1 or match.end is 2, 4 or 6 then its is a valid list start ✅
+    - marker_is_valid = True ✅
+  - lets check if next item is on the same level as previous one ✅
+    - first check for the list_type == 'current ✅
+    - and does the previous level number of tabs match the number of tabs found in this level? ✅
+    - or does the previous level match.end match the current match.end ✅
+    - marker_is_valid = True ✅
+  - now check if we are looking at a nested list ✅
+    - first check that we are looking for nested lists ✅
+    - and that the previous number of tabs + 1 matches the current number of found tabs ✅
+    - or that the list levels, current level, last location + 2 matches the current found location ✅
+    - or that the list levels, current level, last location + 4 matches the current found location ✅
+
+**Note:** at this point it became apparent that the list of dictionaries that keeps track of the current level, last match location and tabs matched needed to be updated. The tabs count starts at zero and as such it was clashing with the checker for item on the same level. To fix it I created a variable to hold a boolean indicating if Tabs are being used to create this list or not and with it find out the number of Tabs used to indent the item or store -1 to indicate the absence of Tabs in this list.
+  - return 'marker_is_valid' ✅
 
 5. Check for paragraphs
 Because we are checking for headers and list items first, if neither one was a match, we can savely assume that the line is a paragraph, therefore:

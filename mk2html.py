@@ -10,14 +10,21 @@ def get_md_file(title):
 
   # check for popular extension first .md then .markdown
   ext_found = 'md' if exists(f'docs/{title}.md') else 'markdown' if exists(f'docs/{title}.markdown') else False
-
+  print(f'DID WE MAKE THIS FAR: {ext_found}')
   # lets read the file or let the user down
   if ext_found != False:
-    f = open(f'docs/{title}.{ext_found}')
-    file_info = f.read()
-    f.close()
+    try:
+      f = open(f'docs/{title}.{ext_found}')
+      try:
+        file_info = f.read()
+      except:
+        print("Was unable to read the file")
+      finally:
+        f.close()
+    except:
+      print("Something not right when opening the markdown file")
   else:
-    file_info = 'File Not Found, please make sure it exists'
+    raise Exception('File Not Found, please make sure it exists')
 
   # give file back as string
   return file_info
@@ -227,46 +234,60 @@ def get_links(text):
 
 
 # @description Parser logic taking care of transforming the markdown file to HTML
-def init_parser():
-  print('\n## Welcome this is Markdown to HTML parser ##\n')
-  # global list store the created html tags
-  html_list = []
+# @params file {string} the markdown file we are going to convert
+# @returns {html_list} the string with html items
+def parse_file(file_name):
+  # lets catch any errors
+  try:
+    # incase no filename was given
+    if file_name.strip() == '':
+      raise Exception("File name can not be empty, please provide the file name")
 
-  # lets get the file
-  file_name = 'HTML'
-  md_file = get_md_file(file_name)
-  # split file into lines
-  md_file_lines = re.split(r'[\n\r]', md_file)
+    # to store the entire HTML created from the markdown file
+    html_list = []
 
-  while len(md_file_lines) > 0:
-    # check for empty item in array
-    if md_file_lines[0].strip() == '':
-      md_file_lines.pop(0)
-      continue
+    # lets get the file
+    md_file = get_md_file(file_name)
+    # split file into lines
+    md_file_lines = re.split(r'[\n\r]', md_file)
 
-    # lets check for header
-    header = get_header(md_file_lines[0])
-    if header[0]:
-      html_list.append(header[1])
-      md_file_lines.pop(0)
-      continue
+    while len(md_file_lines) > 0:
+      # check for empty item in array
+      if md_file_lines[0].strip() == '':
+        md_file_lines.pop(0)
+        continue
 
-    # lets check for lists
-    list = get_lists(md_file_lines)
-    if list[0]:
-      html_list.extend(list[1])
-      md_file_lines = list[2]
-      continue
+      # lets check for header
+      header = get_header(md_file_lines[0])
+      if header[0]:
+        html_list.append(header[1])
+        md_file_lines.pop(0)
+        continue
 
-    # at this point we can assume, without certainty, the line is a paragraph
-    paragraph = get_paragraphs(md_file_lines)
-    if (paragraph[0]):
-      html_list.append(paragraph[1])
-      md_file_lines = paragraph[2]
-      continue
-  
-  # show me the final html_list
-  for line in html_list:
-    print(line)
+      # lets check for lists
+      list = get_lists(md_file_lines)
+      if list[0]:
+        html_list.extend(list[1])
+        md_file_lines = list[2]
+        continue
 
-init_parser()
+      # at this point we can assume, without certainty, the line is a paragraph
+      paragraph = get_paragraphs(md_file_lines)
+      if (paragraph[0]):
+        html_list.append(paragraph[1])
+        md_file_lines = paragraph[2]
+        continue
+    
+    # return the HTML
+    return html_list
+  except Exception as err:
+    print(err.args)
+  except:
+    print("There was an issue creating the HTML file")
+
+
+# @description runs the parser with a the demo markdown file and prints the output
+def demo():
+  html_file = parse_file('demo')
+  for item in html_file:
+    print(item)

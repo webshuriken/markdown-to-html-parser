@@ -33,6 +33,4 @@ There is something here
 
 ## Author
 
-[webshuriken](url)
-
-- list is last line on the doc
+Carlos E Alford [webshuriken](url)

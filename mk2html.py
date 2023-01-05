@@ -2,7 +2,9 @@ from os.path import exists
 import re
 
 
-# get the markdown file from /docs folder
+# @description get the markdown file from /docs folder
+# @params title {string} the name of the markdown document to convert
+# @returns {string} the markdown file
 def get_md_file(title):
   file_info = False
 
@@ -21,7 +23,7 @@ def get_md_file(title):
   return file_info
 
 # @description check for header in string
-# @params file_line {string}
+# @params file_line {string} the string to check
 # @returns {tuple} of two values {bool, string}
 def get_header(file_line):
   header = re.match(r'#{1,6}\s', file_line)
@@ -57,8 +59,11 @@ def get_lists(all_file_lines):
       html_list.append(f'<li>{all_file_lines[0][match.end():]}')
       # remove the first file line as its a list item
       all_file_lines.pop(0)
-      # lets check for another list item
-      match = re.match(r'[\s\t]*[\*\+-] ', all_file_lines[0]) 
+      # while there list is not empty, lets check for another list item
+      if len(all_file_lines) > 0:
+        match = re.match(r'[\s\t]*[\*\+-] ', all_file_lines[0])
+      else:
+        match = False
 
       # is current item match same as current list level
       if match and valid_list_marker(match, list_levels, current_level, 'current'):
@@ -118,14 +123,17 @@ def valid_list_marker(match, list_levels, current_level, list_type):
   matched_tabs = match.group().count('\t')
 
   # are we creating the first item of a fresh list
-  if list_type == 'start' and (matched_tabs == 1 or match.end() == 2 or match.end() == 4 or match.end() == 6):
-    marker_is_valid = True
-  elif list_type == 'current' and (list_levels[current_level]["tabs"] == matched_tabs or match.end() == list_levels[current_level]["end"]):
-    # current item is part of the previous list
-    marker_is_valid = True
-  elif list_type == 'nested' and ((list_levels[current_level]["tabs"] + 1) == matched_tabs or (list_levels[current_level]["end"] + 2) == match.end() or (list_levels[current_level]["end"] + 4) == match.end()):
-    # current item is to be nested as a list within the previous item
-    marker_is_valid = True
+  if list_type == 'start':
+    if (matched_tabs == 1 or match.end() == 2 or match.end() == 4 or match.end() == 6):
+      marker_is_valid = True
+  elif list_type == 'current':
+    if (list_levels[current_level]["tabs"] == matched_tabs or match.end() == list_levels[current_level]["end"]):
+      # current item is part of the previous list
+      marker_is_valid = True
+  elif list_type == 'nested':
+    if ((list_levels[current_level]["tabs"] + 1) == matched_tabs or (list_levels[current_level]["end"] + 2) == match.end() or (list_levels[current_level]["end"] + 4) == match.end()):
+      # current item is to be nested as a list within the previous item
+      marker_is_valid = True
   elif list_type == 'previous':
     # lets see if current matched space is equal to another match in previous levels
     matched_spaces = False
@@ -139,18 +147,24 @@ def valid_list_marker(match, list_levels, current_level, list_type):
   # numbers.count('\t')
   return marker_is_valid
 
-# @description check for paragraphs
+# @description check for valid paragraphs creating one with html tags
 # @params all_file_lines {list}
 # @returns {tuple} of three values {bool, string, updatedFileLines}
 def get_paragraphs(all_file_lines):
-  html_p = '<p>'
+  # use the middle item, item 1, to create the string in the paragraph
+  html_p = ['<p>', '', '</p>']
   # lets keep going until we find an empty line
   while all_file_lines[0].strip() != '':
-    html_p += f'{all_file_lines[0]} '
+    # catch any run away list items trying to become paragraphs
+    if get_lists([all_file_lines[0]])[0]:
+      break
+
+    html_p[1] += f'{all_file_lines[0]} '
     all_file_lines.pop(0)
   
-  # close the paragraph tag
-  html_p = html_p.rstrip() + '</p>'
+  # remove any trailing spaces and join the array items
+  html_p[1] = html_p[1].strip()
+  html_p = ''.join(html_p)
 
   # filter the text for boldness or links
   html_p = text_filter(html_p)
@@ -244,7 +258,7 @@ def init_parser():
       md_file_lines = list[2]
       continue
 
-    # at this point we can assume the line is a paragraph
+    # at this point we can assume, without certainty, the line is a paragraph
     paragraph = get_paragraphs(md_file_lines)
     if (paragraph[0]):
       html_list.append(paragraph[1])

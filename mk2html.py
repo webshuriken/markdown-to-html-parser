@@ -10,7 +10,7 @@ def get_md_file(title):
 
   # check for popular extension first .md then .markdown
   ext_found = 'md' if exists(f'docs/{title}.md') else 'markdown' if exists(f'docs/{title}.markdown') else False
-  print(f'DID WE MAKE THIS FAR: {ext_found}')
+  
   # lets read the file or let the user down
   if ext_found != False:
     try:
@@ -168,6 +168,10 @@ def get_paragraphs(all_file_lines):
 
     html_p[1] += f'{all_file_lines[0]} '
     all_file_lines.pop(0)
+
+    # exit loop if there are not more items in the list
+    if len(all_file_lines) == 0:
+      break
   
   # remove any trailing spaces and join the array items
   html_p[1] = html_p[1].strip()

@@ -147,9 +147,16 @@ The list did not take into account how to properly check when spaces or Tabs are
     - and that the previous number of tabs + 1 matches the current number of found tabs ✅
     - or that the list levels, current level, last location + 2 matches the current found location ✅
     - or that the list levels, current level, last location + 4 matches the current found location ✅
-
-**Note:** at this point it became apparent that the list of dictionaries that keeps track of the current level, last match location and tabs matched needed to be updated. The tabs count starts at zero and as such it was clashing with the checker for item on the same level. To fix it I created a variable to hold a boolean indicating if Tabs are being used to create this list or not and with it find out the number of Tabs used to indent the item or store -1 to indicate the absence of Tabs in this list.
+  - final check is for when the matched list marker sits closer to the left margin than the above list item. This will close the nested lists above.
+    - check the list_type to match 'previous' and ✅
+      - level 0 tabs property is not equals to -1 and ✅
+      - number of tabs in current match is less than the current level tabs number ✅
+      - or current match end is less than current level end ✅
+        - use a loop to check the previous levels 'end' value not including the current level value. A match indicates the current item belongs to a lower level list. ✅
+    
   - return 'marker_is_valid' ✅
+
+**Note:** during this iteration of the planning it became apparent that the list of dictionaries that keeps track of the current level, last match location and tabs matched needed to be updated. The tabs count starts at zero and as such it was clashing with the checker for item on the same level. To fix it I created a variable to hold a boolean indicating if Tabs are being used to create this list or not and with it find out the number of Tabs used to indent the item or store -1 to indicate the absence of Tabs in this list.
 
 5. Check for paragraphs
 Because we are checking for headers and list items first, if neither one was a match, we can savely assume that the line is a paragraph, therefore:

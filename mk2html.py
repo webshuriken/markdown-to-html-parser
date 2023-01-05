@@ -37,7 +37,7 @@ def get_header(file_line):
 # @returns {tuple} of three values {bool, string, updatedFileLines}
 def get_lists(all_file_lines):
   # list of dictionaries, each has the list level and match end location
-  list_levels = [{"level": 0, "end": 0, "tabs": -1}]
+  list_levels = [{"level": 0, "end": 0, "tabs": -2}]
   current_level = 0
   # will store the list as a combination of html tags and text items
   html_list = []
@@ -50,7 +50,7 @@ def get_lists(all_file_lines):
     list_levels[0]["end"] = match.end()
     # lets see if they are using tabs or spaces
     list_with_tabs = match.group().count('\t') == 1 if True else False
-    list_levels[0]["tabs"] = list_with_tabs if match.group().count('\t') else -1
+    list_levels[0]["tabs"] = list_with_tabs if match.group().count('\t') else -2
     # loop will find all items including the nested ones
     while current_level >= 0:
       # at this point we guaranty a valid list item, so lets append to 'html_list'
@@ -68,9 +68,9 @@ def get_lists(all_file_lines):
         html_list.append('<ul>')
         current_level += 1
         # add a new level to the list
-        list_levels.append({"level": current_level, "end": match.end(), "tabs": list_with_tabs if match.group().count("\t") else -1})
+        list_levels.append({"level": current_level, "end": match.end(), "tabs": list_with_tabs if match.group().count("\t") else -2})
       # is current item match a level before the current active list level
-      elif match and match.end() < list_levels[current_level]["end"]:
+      elif match and valid_list_marker(match, list_levels, current_level, 'previous'):
         # appending here is to guarante the closure of currently nested list
         html_list[len(html_list) - 1] += '</li>'
         html_list.append('</ul>')
@@ -116,6 +116,7 @@ def get_lists(all_file_lines):
 def valid_list_marker(match, list_levels, current_level, list_type):
   marker_is_valid = False
   matched_tabs = match.group().count('\t')
+
   # are we creating the first item of a fresh list
   if list_type == 'start' and (matched_tabs == 1 or match.end() == 2 or match.end() == 4 or match.end() == 6):
     marker_is_valid = True
@@ -125,7 +126,15 @@ def valid_list_marker(match, list_levels, current_level, list_type):
   elif list_type == 'nested' and ((list_levels[current_level]["tabs"] + 1) == matched_tabs or (list_levels[current_level]["end"] + 2) == match.end() or (list_levels[current_level]["end"] + 4) == match.end()):
     # current item is to be nested as a list within the previous item
     marker_is_valid = True
-    
+  elif list_type == 'previous':
+    # lets see if current matched space is equal to another match in previous levels
+    matched_spaces = False
+    for level in range(len(list_levels) - 1):
+      if list_levels[level]["end"] == match.end():
+        matched_spaces = True
+    # first check if the tabs match otherwise check the matched_spaces
+    if (list_levels[0]["tabs"] != -1 and matched_tabs < list_levels[current_level]["tabs"]) or matched_spaces:
+      marker_is_valid = True
 
   # numbers.count('\t')
   return marker_is_valid

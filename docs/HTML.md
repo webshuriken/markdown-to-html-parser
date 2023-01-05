@@ -16,16 +16,16 @@ Using tags you describe the document **layout** extra text
 **Tags**
 
 - <h1></h1>
-- Browser tab **header** <title></title>. 
-- Lazy continuation line.
+  - Browser tab **header** <title></title>. 
+  - Lazy continuation line.
 - Other
 
 There is something here
 
 * Text nodes
   * Same level item
-  * anchor
-  * thir level
+    * anchor
+* thir level
 
 + paragraph
 + heading

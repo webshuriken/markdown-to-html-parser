@@ -4,23 +4,20 @@ Lets plan out the steps to create the parser.
 
 ## Issues
 
-- List items:
-  - Add the `+` as a valid list item marker ✅
-  - follow rule 2 of unordered lists. First list item marker can only be 0, 2, 4 spaces from the left margin. ✅
-  - follow rule 3 of unordered lists. Nested lists are create by placing the list marker 2, 4 spaces away from the list marker on the line above. ✅
-  - handle tab usage. Currently the parser can not handle the use of tabs.
+**List items**:
+- Add the `+` as a valid list item marker ✅ (SOLVED)
+- follow rule 2 of unordered lists. First list item marker can only be 0, 2, 4 spaces from the left margin. ✅(SOLVED)
+- follow rule 3 of unordered lists. Nested lists are create by placing the list marker 2, 4 spaces away from the list marker on the line above. ✅ (SOLVED)
+- handle tab usage. Currently the parser can not handle the use of tabs. ✅ (SOLVED)
 
-- paragraphs ✅ (SOLVED)
-Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.. The regex separating the document lines into a list needs looking into..
+**boldness**
+- Missed the fact that I have to remove the markers which indicated the texts is to be bold.  ✅ (SOLVED)
 
-- boldness ✅ (SOLVED)
-Missed the fact that I have to remove the markers which indicated the texts is to be bold.
-
-- paragraphs
-When there is a list item that does not follow the rules, the parser moves on to the paragraph checker as it is now treated as a paragraph, however if the next list item is correctly placed but it sites on the line below the list item which failed, it is also treated as a paragraph. This is an unwanted effect and goes against the rules. If the rules are followed properly the described event should create a paragraph for the list item that was not indented properly and then create a list with any number of items for the line that has the list item that was indented properly.
-
-- paragraphs
-It seems paragraphs are not removing any left trailing white space. These need removing.
+**paragraphs**
+- Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.
+The regex separating the document lines into a list needs looking into. ✅ (SOLVED)
+- When there is a list item that does not follow the rules, the parser moves on to the paragraph checker as it is now treated as a paragraph, however if the next list item is correctly placed but it sites on the line below the list item which failed, it is also treated as a paragraph. This is an unwanted effect and goes against the rules. If the rules are followed properly the described event should create a paragraph for the list item that was not indented properly and then create a list with any number of items for the line that has the list item that was indented properly.
+- It seems paragraphs are not removing any left trailing white space. These need removing.
 
 ## Global Plan
 

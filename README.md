@@ -66,8 +66,8 @@ print(mk2html.parse_file('example'))
 
 ## Features
 
-- Headers, Links, Lists, Bold text and Paragraphs
-- Django integration
+- Headers, Links, Lists, Bold text and Paragraphs support
+- Made to be used as a module
 - Search file system for file name provided by user
 - Try and catches any errors produced when accessing the markdown file.
 

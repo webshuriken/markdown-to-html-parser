@@ -23,8 +23,8 @@ Using tags you describe the document **layout** extra text
 There is something here
 
 * Text nodes
-  * Same level item
-    * anchor
+* Same level item
+* anchor
 * thir level
 
 + paragraph
@@ -34,3 +34,5 @@ There is something here
 ## Author
 
 [webshuriken](url)
+
+- list is last line on the doc

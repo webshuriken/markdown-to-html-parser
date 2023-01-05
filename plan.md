@@ -2,23 +2,6 @@
 
 Lets plan out the steps to create the parser.
 
-## Issues
-
-**List items**:
-- Add the `+` as a valid list item marker ✅ (SOLVED)
-- follow rule 2 of unordered lists. First list item marker can only be 0, 2, 4 spaces from the left margin. ✅(SOLVED)
-- follow rule 3 of unordered lists. Nested lists are create by placing the list marker 2, 4 spaces away from the list marker on the line above. ✅ (SOLVED)
-- handle tab usage. Currently the parser can not handle the use of tabs. ✅ (SOLVED)
-
-**boldness**
-- Missed the fact that I have to remove the markers which indicated the texts is to be bold.  ✅ (SOLVED)
-
-**paragraphs**
-- Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.
-The regex separating the document lines into a list needs looking into. ✅ (SOLVED)
-- When there is a list item that does not follow the rules, the parser moves on to the paragraph checker as it is now treated as a paragraph, however if the next list item is correctly placed but it sites on the line below the list item which failed, it is also treated as a paragraph. This is an unwanted effect and goes against the rules. If the rules are followed properly the described event should create a paragraph for the list item that was not indented properly and then create a list with any number of items for the line that has the list item that was indented properly.
-- It seems paragraphs are not removing any left trailing white space. These need removing.
-
 ## Global Plan
 
 1. Find the markdown file
@@ -204,57 +187,19 @@ to: `<a href="link">text_for_link</a>`
       - concat leftover text from the end of last matched link to the end of the text ✅
     - return 'html_link' ✅
 
-## Rules
+## Issues
 
-### Header rules
+**List items**:
+- Add the `+` as a valid list item marker ✅ (SOLVED)
+- follow rule 2 of unordered lists. First list item marker can only be 0, 2, 4 spaces from the left margin. ✅(SOLVED)
+- follow rule 3 of unordered lists. Nested lists are create by placing the list marker 2, 4 spaces away from the list marker on the line above. ✅ (SOLVED)
+- handle tab usage. Currently the parser can not handle the use of tabs. ✅ (SOLVED)
 
-- Number if signs `#` correspond to the heading level
-- a single `#` for h1 and six `######` for h6
-- there has to be a single space between hash and firt letter of title
-- the hash sign can not be preceeded by any empty spacer or character
-- Syntax: `# THE TITLE`
+**boldness**
+- Missed the fact that I have to remove the markers which indicated the texts is to be bold.  ✅ (SOLVED)
 
-### Bold rules
-
-- add 2 asterisks `**WORD**` or underscores `__Many Words__` beofre and after the text
-- the symbols can not have any space between them and the text they are targeting
-- dont mix symbols together. The start and end tags must be performed with the same symbol.
-- Syntax:
-`__ONE-WORD__` OR `**ONE-WORD**`
-`Using __many words__ is fine`
-`It can also be used be**wee**n letters in a word`
-
-### Link rules
-
-- syntax: `[link](url)`
-- checking that both the link and urlare in correct format is not the parsers responsibility
-- Parser needs to ensure to encode white spaces
-- links do not need space before or after
-
-## Paragraphs rules
-
-- use blank lines to separate one or many lines of text
-- Do not indent paragraphs with tabs or spaces
-
-### List rules
-
-**Unordered lists**
-- lists starts with any of these `- * +` 
-```
-+ list item
-- also a valid list item
-* another valid item
-```
-- The very first list item must have 0 to 4 spaces or single tab to be valid. Otherwise it is treated as a paragraph.
-```
-- valid list start
-      - list started to far out and is treated as a paragraph
-```
-- to nest a list, the marker for the next level list must appear below the first character of the parent list item.
-```
-- First item of parent list
-  - Nested list
-the marker must sit below the first character of previous item
-    - First item
-      - nested item
-```
+**paragraphs**
+- Paragraphs are meant to be separated using a space between two lines. Currently if the user presses 'Enter' to carry on below the current line, without any space between them, it treats it as a separate paragraph which is not the case.
+The regex separating the document lines into a list needs looking into. ✅ (SOLVED)
+- When there is a list item that does not follow the rules, the parser moves on to the paragraph checker as it is now treated as a paragraph, however if the next list item is correctly placed but it sites on the line below the list item which failed, it is also treated as a paragraph. This is an unwanted effect and goes against the rules. If the rules are followed properly the described event should create a paragraph for the list item that was not indented properly and then create a list with any number of items for the line that has the list item that was indented properly. ✅ (SOLVED)
+- It seems paragraphs are not removing any left trailing white space. These need removing. ✅ (SOLVED)

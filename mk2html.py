@@ -252,8 +252,8 @@ def parse_file(file_name):
 
     # lets get the file
     md_file = get_md_file(file_name)
-    # split file into lines
-    md_file_lines = re.split(r'[\n\r]', md_file)
+    # use builtin method to split lines so we dont worry about EOF used by OS.
+    md_file_lines = md_file.splitlines();
 
     while len(md_file_lines) > 0:
       # check for empty item in array

@@ -1,8 +1,10 @@
 # Markdown to HTML parser
 
-A simple markdown to html parser, module, written in Python. It is for the CS50W course project built with Django.
+A simple markdown to html parser, module, written in Python. Can be intergrated to any DJango project.
 
 ## About
+
+It is part of the CS50W course by **Harvard University**. It takes in a `Markdown` document and translates it to `HTML` allowing a browser to treat it as a web page. Here is my detailed [plan](plan.md) for the project.
 
 ![markdown to html screenshot](/screenshot.png)
 
@@ -55,10 +57,7 @@ print(mk2html.parse_file('example'))
 - Made to be used as a module
 - Search file system for file name provided by user
 - Try and catches any errors produced when accessing the markdown file.
-
-## Markdown Syntax
-
-[Basic markdown rules](/baisc_markdown_syntax.md)
+- See [makdown support](markdown_supported.md) for a detailed list of supported syntax.
 
 ## Roadmap
 

@@ -1,4 +1,4 @@
-# Basic markdown syntax
+# Markdown Supported
 
 A basic set of rules supported by the mk2html parser when creating markdown files.
 

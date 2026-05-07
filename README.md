@@ -2,51 +2,40 @@
 
 A simple markdown to html parser, module, written in Python. It is for the CS50W course project built with Django.
 
-[![MIT License](https://img.shields.io/github/license/webshuriken/markdown-to-html-parser)](https://choosealicense.com/licenses/mit/)
+## About
 
-## Table of Contents
+![markdown to html screenshot](/screenshot.png)
 
-- [Installation](#installation)
-- [Run Locally](#run-locally)
-- [Basic syntax](#basic-syntax)
-- [Screenshots](#screenshots)
-- [Features](#features)
-- [Markdown Syntax](#markdown-syntax)
-- [Lessons](#lessons)
-- [Feedback](#feedback)
-- [Future implementations](#future-implementations)
-- [Authors](#authors)
-- [Acknowledgements](#acknowledgements)
-- [License](#license)
+## Tech Stack
 
-## Installation
-
-This project required Python version 3 to work. How to install it will depend on your operating system.
-Here is the link to the [Python Installation page](https://www.python.org/downloads/).
+- Django (Python)
+- Markdown
+- HTML
+- CSS
 
 ## Run Locally
 
-This instructions will run the program using the markdown file, demo.md, that was provided. Feel free to edit or change this file. The parser was made to be integrated with my Django app.
+This instructions will run the program using the markdown file, `demo.md`, that was provided. Feel free to edit or change this file. The parser was made to be integrated with my Django app.
 
-Clone the project
+1. Clone the project
 
 ```bash
 git clone https://github.com/webshuriken/markdown-to-html-parser
 ```
 
-Using the command prompt, terminal, go to the project directory
+2. Using the command prompt, terminal, go to the project directory
 
 ```bash
 cd my-project
 ```
 
-In the command prompt, terminal, run Python
+3. In the command prompt, terminal, run Python
 
 ```bash
 python
 ```
 
-Now with Python running, import the module and use it.
+4. Now with Python running, import the module and use it.
 
 ```python
 import mk2html
@@ -60,10 +49,6 @@ print(mk2html.demo())
 print(mk2html.parse_file('example'))
 ```
 
-## Screenshots
-
-![markdown to html screenshot](/screenshot.png)
-
 ## Features
 
 - Headers, Links, Lists, Bold text and Paragraphs support
@@ -75,33 +60,27 @@ print(mk2html.parse_file('example'))
 
 [Basic markdown rules](/baisc_markdown_syntax.md)
 
-## Lessons
+## Roadmap
 
-At first, I thought that creating this parser would be easy until I read the documentation. It thought me that creating something like a list, is not as simple as just checking for the list marker. You need to take into account if tabs or spaces were used to build the list. Then you need to check where the current list marker sits according to the marker above it. It provide a nice learning curve which was fun.
+### Version 1.0.1
 
-Apart from learning a lot about markdown I also had the pleasure of increasing my Python knowledge. Further improved my understanding of lambda function and list comprehensions. There is also the use of `strip()` to remove white spaces which I kept getting confused with the JS version called `trim()`. Python seems to have a function for everything.
+- [ ] output `HTML` file should have elements indented properly
 
-## Feedback
+### Version 1.1.0
 
-If you have any feedback, please reach out to me at webshuriken@gmail.com
+- [ ] **paragraphs**: ability to handle line breaks.
 
-## Future implementations
+### Version 1.2.0
 
-**paragraphs**
-- ability to handle line breaks.
+- [ ] **links**: ability to handle white spaces in the url.
 
-**links**
-- ability to handle white spaces in the url.
+### Version 1.3.0
 
-**Emphasis**
-- handles italic text
+- [ ] **Emphasis**: handles italic text
 
-**Horizontal rules**
-- creates a horizontal line, from the left to the right margin
+### Version 1.1.0
 
-## Authors
-
-- [Carlos E Alford](https://www.github.com/web-shuriken)
+- [ ] Horizontal rules**: creates a horizontal line, from the left to the right margin
 
 ## Acknowledgements
 
@@ -109,6 +88,10 @@ If you have any feedback, please reach out to me at webshuriken@gmail.com
  - [Python regex Docs](https://docs.python.org/3/howto/regex.html)
  - [Markdown guide](https://www.markdownguide.org/basic-syntax#ordered-lists)
 
+## Authors
+
+- [Carlos E Alford](https://www.github.com/web-shuriken)
+
 ## License
 
-[MIT](/LICENSE)
+[MIT](LICENSE)
